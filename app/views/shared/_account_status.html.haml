@@ -1,0 +1,13 @@
+- if user_signed_in?
+  %h3
+    Signed in as
+    %span.highlight= current_user.email
+    %span.separator /
+    = link_to "My account", edit_user_registration_path
+    %span.separator /
+    = link_to "Sign out", destroy_user_session_path
+- else
+  %h3
+    = link_to "Sign up", new_user_registration_path
+    %span.separator /
+    = link_to "Sign in", new_user_session_path

@@ -1,0 +1,16 @@
+- content_for :navigation do
+  %li= link_to "Dashboard", root_path
+
+%h1 New list
+
+= form_for @list, :method => "post" do |f|
+  = render "shared/error_messages", :target => @list, :message => "prohibited this list from being created:"
+  %fieldset
+    %legend List info
+    %p
+      = f.label :name, "Enter a name for this list"
+      = f.text_field :name
+    %p
+      = f.submit "Create list"
+      or
+      = link_to "cancel", root_path

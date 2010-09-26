@@ -1,0 +1,18 @@
+- content_for :navigation do
+  %li= link_to "Dashboard", root_path
+
+%h1
+  Edit list
+  %span.highlight= @list.name
+
+= form_for @list, :method => "put" do |f|
+  = render "shared/error_messages", :target => @list, :target_name => "list"
+  %fieldset
+    %legend List info
+    %p
+      = f.label :name, "Type a new name for this list"
+      = f.text_field :name
+    %p
+      = f.submit "Update list"
+      or
+      = link_to "cancel", root_path

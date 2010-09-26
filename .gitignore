@@ -1,0 +1,6 @@
+/.bundle
+/.sass-cache
+/db/*.sqlite3
+/log/*.log
+/tmp/**/*
+/capybara*.html

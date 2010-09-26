@@ -1,0 +1,191 @@
+/* Sass variables */
+
+$black:          #000000;
+$light-grey:     #d3d3d3;
+$dark-turquoise: #006688;
+$white-smoke:    #f5f5f5;
+$deep-pink:      #ff1493;
+$dark-green:     #006400;
+$light-green:    #e6ffe6;
+$light-red:      #ffe6e6;
+$dark-red:       #8b0000;
+
+$txt-color:                $black;
+$txt-highlight-color:      $deep-pink;
+$txt-a-color:              $dark-turquoise;
+$txt-a-hover-color:        $black;
+$border-light-color:       $light-grey;
+$border-dark-color:        $black;
+$notice-sucess-txt-color:  $dark-green;
+$notice-sucess-bkg-color:  $light-green;
+$notice-failure-txt-color: $dark-red;
+$notice-failure-bkg-color: $light-red;
+$fieldset-bkg-color:       $white-smoke;
+
+$border-thin:   1px solid $border-light-color;
+$border-strong: 2px solid $border-dark-color;
+
+
+/* CSS */
+
+body {
+	color: $txt-color;
+	font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+	margin: 0;
+	padding: 1em;
+}
+
+a {
+  border-bottom: $border-thin;
+  color: $txt-a-color;
+  text-decoration: none;
+
+  &:hover   { color: $txt-a-hover-color; }
+  &:visited { color: $txt-a-color; }
+}
+
+.clear { clear: both; }
+
+.highlight { color: $txt-highlight-color; }
+
+.separator { color: $border-light-color; }
+
+div#container {
+  border: 1px solid $border-dark-color;
+	padding: 1em;
+  width: 53em;
+}
+
+div#account_status {
+  border-bottom: $border-thin;
+  text-align: right;
+}
+
+/* Navigation */
+
+ul#navigation {
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    border-right: $border-thin;
+    display: inline;
+    padding: 0.3em 0.7em 0.3em 0.5em;
+
+    &:first-child { padding-left: 0; }
+    &:last-child { border-right: 0; }
+  }
+}
+
+/* Lists */
+
+ul.with-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 33em;
+
+  li {
+    margin: 0;
+    padding: 0;
+
+    .items {
+      border-bottom: $border-thin;
+      float: left;
+      width: 30em;
+    }
+
+    .actions {
+      float: left;
+      text-align: center;
+      width: 3em;
+
+      a {
+        border: 0;
+
+        img {
+          border: 0;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}
+
+/* forms */
+
+div#error_explanation {
+  background-color: $notice-failure-bkg-color;
+  border: $border-strong;
+  margin: 0 0 1.4em 0;
+  padding: 0.6em;
+
+  h2 {
+    color: $notice-failure-txt-color;
+    margin: 0;
+    padding: 0.24em;
+  }
+
+  ul { margin: 0; }
+}
+
+fieldset {
+	background-color: $fieldset-bkg-color;
+	border: $border-thin;
+	margin: 0;
+	padding: 1em;
+	width: 0;
+
+  legend {
+  	font-size: 1.4em;
+  	font-weight: bold;
+  }
+
+  p {
+  	margin: 0;
+  	padding: 0.65em 0 0.65em 0;
+  }
+
+  label {
+    display: block;
+    padding: 0.25em;
+  }
+
+  label.checkbox, label.radiobutton { display: inline; }
+
+  input[type=text], input[type=password] {
+    border: $border-thin;
+  	font-size: 1.4em;
+  	font-weight: bold;
+  	padding: 0.45em;
+  }
+
+  input[type=submit] { font-size: 1.2em; }
+}
+
+/* Flash messages */
+
+div.flash {
+  border: $border-strong;
+  margin: 0 0 1.4em 0;
+  padding: 0.6em;
+
+  h2 {
+    margin: 0;
+    padding: 0.24em;
+  }
+}
+
+div.notice {
+  @extend div.flash;
+
+  background-color: $notice-sucess-bkg-color;
+  color: $notice-sucess-txt-color;
+}
+
+div.alert {
+  @extend div.flash;
+
+  background-color: $notice-failure-bkg-color;
+  color: $notice-failure-txt-color;
+}

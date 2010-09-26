@@ -1,0 +1,17 @@
+- content_for :navigation do
+  %li= link_to "Dashboard", root_path
+  %li= link_to "Back to list", list_tasks_url(@list)
+
+%h1 Edit task
+
+= form_for @task, :url => { :action => "update" }, :method => "put" do |f|
+  = render "shared/error_messages", :target => @task, :target_name => "task"
+  %fieldset
+    %legend Task info
+    %p
+      = f.label :description, "Type a new description for this task"
+      = f.text_field :description
+    %p
+      = f.submit "Update task"
+      or
+      = link_to "cancel", list_tasks_url(@list)

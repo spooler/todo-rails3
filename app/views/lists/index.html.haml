@@ -1,0 +1,18 @@
+- content_for :navigation do
+  %li Dashboard
+  %li= link_to "New list", new_list_path
+
+%h1 My lists
+
+- if @lists.any?
+  %ul.with-actions
+    - @lists.each do |list|
+      %li
+        .items= link_to list.name, list
+        .actions
+          = link_to image_tag("list-action-edit.png"), edit_list_path(list), :id => "edit_#{list.id}"
+          = link_to image_tag("list-action-delete.png"), list_path(list), :method => :delete, :confirm => "Are you sure?", :id => "delete_#{list.id}"
+        .clear
+- else
+  %p You have not created any lists yet.
+  = link_to "Want to create one?", new_list_path

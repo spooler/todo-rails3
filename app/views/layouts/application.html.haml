@@ -1,0 +1,16 @@
+!!! XML
+!!!
+%html
+  %head
+    %title ToDo app
+    = csrf_meta_tag
+    = stylesheet_link_tag "compiled/application"
+    = javascript_include_tag :defaults
+  %body
+    #container
+      #account_status= render "shared/account_status"
+      - flash.each do |name, msg|
+        %div{ :class => name }
+          %h2= msg
+      %ul#navigation= yield :navigation
+      #content= yield
