@@ -55,7 +55,7 @@ ul.with-actions {
   ul.with-actions li {
     margin: 0;
     padding: 0; }
-    ul.with-actions li .items {
+    ul.with-actions li .item {
       border-bottom: 1px solid #d3d3d3;
       float: left;
       width: 30em; }

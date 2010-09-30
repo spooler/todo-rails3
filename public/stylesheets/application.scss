@@ -61,6 +61,7 @@ div#account_status {
   text-align: right;
 }
 
+
 /* Navigation */
 
 ul#navigation {
@@ -77,6 +78,7 @@ ul#navigation {
   }
 }
 
+
 /* Lists */
 
 ul.with-actions {
@@ -89,7 +91,7 @@ ul.with-actions {
     margin: 0;
     padding: 0;
 
-    .items {
+    .item {
       border-bottom: $border-thin;
       float: left;
       width: 30em;
@@ -111,6 +113,7 @@ ul.with-actions {
     }
   }
 }
+
 
 /* forms */
 
@@ -162,6 +165,7 @@ fieldset {
 
   input[type=submit] { font-size: 1.2em; }
 }
+
 
 /* Flash messages */
 

@@ -1,125 +1,195 @@
 require File.expand_path('../../integration_test_helper',  __FILE__)
 
-# class UserTest < ActionController::IntegrationTest
-#   test "A user tries to create an account" do
-#     visit "/"
-#     click_link "Sign up"
-#     fill_in "Your email",                :with => "test@test.com"
-#     fill_in "Create a password",         :with => "test"
-#     fill_in "Confirm your new password", :with => "test"
-#     click_button "Sign up"
-# 
-#     assert page.has_content? "You have signed up successfully"
-#     assert page.has_content? "Signed in as test@test.com"
-#     assert page.has_content? "Sign out"
-#     assert page.has_no_content? "Sign up"
-#     assert page.has_no_content? "Sign in"
-#   end
-# end
-
 class UserTest < ActionController::IntegrationTest
-  test "A user tries to sign in" do
-    User.create(:email => "test@test.com", :password => "test", :password_confirmation => "test", :remember_me => false)
+  # new / create
+  context "As a visitor, I want to create an account, so that I can use the app" do
+    setup do
+      visit "/users/sign_up"
+    end
 
-    visit "/"
-    click_link "Sign in"
-    fill_in "Your email",    :with => "test@test.com"
-    fill_in "Your password", :with => "test"
-    click_button "Sign in"
+    test "A visitor tries to create an account" do
+      fill_in "Your email",            :with => "foo@example.com"
+      fill_in "Create a password",     :with => "foo"
+      fill_in "Confirm your password", :with => "foo"
+      click_button "Sign up"
 
-    assert page.has_content? "You have signed up successfully"
-    assert page.has_content? "Signed in as test@test.com"
-    assert page.has_content? "Sign out"
-    assert page.has_no_content? "Sign up"
-    assert page.has_no_content? "Sign in"
+      assert page.has_content? "You have signed up successfully"
+      assert page.has_content? "Signed in as foo@example.com"
+    end
+
+    test "A visitor submits a blank email address, a blank password and a confirmation password that doesn't match password" do
+      fill_in "Your email",            :with => ""
+      fill_in "Create a password",     :with => ""
+      fill_in "Confirm your password", :with => "foo"
+      click_button "Sign up"
+
+      assert page.has_content? "3 errors prohibited this user from being saved:"
+      assert page.has_content? "Email can't be blank"
+      assert page.has_content? "Password can't be blank"
+      assert page.has_content? "Password doesn't match confirmation"
+    end
+
+    test "A visitor submits a non valid email address" do
+      fill_in "Your email",            :with => "fooexample.com"
+      fill_in "Create a password",     :with => "foo"
+      fill_in "Confirm your password", :with => "foo"
+      click_button "Sign up"
+
+      assert page.has_content? "1 error prohibited this user from being saved:"
+      assert page.has_content? "Email is invalid"
+    end
+
+    test "A visitor submits an email address already taken" do
+      User.create(:email => "foo@example.com", :password => "foo")
+
+      fill_in "Your email",            :with => "foo@example.com"
+      fill_in "Create a password",     :with => "foo"
+      fill_in "Confirm your password", :with => "foo"
+      click_button "Sign up"
+
+      assert page.has_content? "1 error prohibited this user from being saved:"
+      assert page.has_content? "Email has already been taken"
+    end
+  end
+
+  # sign in
+  context "As a user, I want to sign in, so that I can access restricted features" do
+    setup do
+      User.create :email => "foo@example.com", :password => "foo"
+
+      visit "/users/sign_in"
+      click_link "Sign in"
+    end
+
+    test "A user tries to sign in" do
+      fill_in "Your email",    :with => "foo@example.com"
+      fill_in "Your password", :with => "foo"
+      click_button "Sign in"
+
+      assert page.has_content? "Signed in successfully"
+      assert page.has_content? "Signed in as foo@example.com"
+
+      click_link "Sign out"
+    end
+
+    test "A user submits a wrong email address" do
+      fill_in "Your email",    :with => "bar@example.com"
+      fill_in "Your password", :with => "foo"
+      click_button "Sign in"
+
+      assert page.has_content? "Invalid email address or password"
+    end
+
+    test "A user submits a wrong password" do
+      fill_in "Your email",    :with => "foo@example.com"
+      fill_in "Your password", :with => "bar"
+      click_button "Sign in"
+
+      assert page.has_content? "Invalid email address or password"
+    end
+  end
+
+  # sign out
+  context "As a user, I want to sign out, so that I can prevent others from using my account" do
+    test "A user tries to sign out" do
+      User.create :email => "foo@example.com", :password => "foo"
+      sign_in "foo@example.com", "foo"
+
+      click_link "Sign out"
+
+      assert page.has_content? "Sign up"
+      assert page.has_content? "Sign in"
+      assert page.has_no_content? "Signed in as foo@example.com"
+      assert page.has_no_content? "Sign out"
+    end
+  end
+
+  # edit / update
+  context "As a user, I want to edit my account, so that I can change my email address and password" do
+    setup do
+      User.create :email => "foo@example.com", :password => "foo"
+      sign_in "foo@example.com", "foo"
+
+      click_link "My account"
+    end
+
+    teardown do
+      click_link "Sign out"
+    end
+
+    test "A user tries to edit his account" do
+      fill_in "Change your email", :with => "bar@example.com"
+      fill_in "New password", :with => "bar"
+      fill_in "Confirm your new password", :with => "bar"
+      fill_in "Your current password", :with => "foo"
+      click_button "Update"
+
+      assert page.has_content? "You updated your account successfully"
+      assert page.has_content? "Signed in as bar@example.com"
+
+      click_link "Sign out"
+
+      sign_in "bar@example.com", "bar"
+
+      assert page.has_content? "Signed in successfully"
+      assert page.has_content? "Signed in as bar@example.com"
+    end
+
+    test "A user submits a blank email address, a blank password and a confirmation password that doesn't match password" do
+      fill_in "Change your email", :with => ""
+      fill_in "New password", :with => ""
+      fill_in "Confirm your new password", :with => "bar"
+      fill_in "Your current password", :with => "foo"
+      click_button "Update"
+
+      assert page.has_content? "3 errors prohibited this user from being saved:"
+      assert page.has_content? "Email can't be blank"
+      assert page.has_content? "Password can't be blank"
+      assert page.has_content? "Password doesn't match confirmation"
+    end
+
+    test "A user submits a non valid email address" do
+      fill_in "Change your email", :with => "barexample.com"
+      fill_in "New password", :with => "bar"
+      fill_in "Confirm your new password", :with => "bar"
+      fill_in "Your current password", :with => "foo"
+      click_button "Update"
+
+      assert page.has_content? "1 error prohibited this user from being saved:"
+      assert page.has_content? "Email is invalid"
+    end
+
+    test "A user submits an email address already taken" do
+      User.create(:email => "bar@example.com", :password => "bar")
+
+      fill_in "Change your email", :with => "bar@example.com"
+      fill_in "New password", :with => "bar"
+      fill_in "Confirm your new password", :with => "bar"
+      fill_in "Your current password", :with => "foo"
+      click_button "Update"
+
+      assert page.has_content? "1 error prohibited this user from being saved:"
+      assert page.has_content? "Email has already been taken"
+    end
+  end
+
+  # delete
+  context "As a user, I want to cancel my account, so that I remove my information from the website" do
+    setup do
+      User.create :email => "foo@example.com", :password => "foo"
+      sign_in "foo@example.com", "foo"
+
+      click_link "My account"
+    end
+
+    test "A user tries to cancel his account" do
+      click_link "cancel my account"
+
+      assert page.has_content? "Sign up"
+      assert page.has_content? "Sign in"
+      assert page.has_no_content? "Signed in as foo@example.com"
+      assert page.has_no_content? "Sign out"
+      assert_equal nil, User.find_by_email("foo@example.com") 
+    end
   end
 end
-
-# Protest.story "As a user I want to create an account so I can use the web app" do
-#   scenario "A user tries to create an account" do
-#     visit "/"
-#     click_link "Sign up"
-#     fill_in "Your email", :with => "test@test.com"
-#     fill_in "Create a password", :with => "test"
-#     click_button "Sign Up"
-# 
-#     assert_contain "Welcome test@test.com"
-#     assert_contain "Logout"
-#     assert_not_contain "Sign Up"
-#     assert_not_contain "Login"
-#   end
-# 
-#   scenario "A user submit an existent email" do
-#     user = User.create :email => "test@test.com", :password => "test"
-# 
-#     visit "/"
-#     click_link "Sign Up"
-#     fill_in "Your email", :with => user.email
-#     fill_in "Create a password", :with => "test"
-#     click_button "Sign Up"
-# 
-#     assert_contain "Email has already been taken"
-#     assert_not_contain "Welcome #{user.email}"
-#     assert_not_contain "Logout"
-#   end
-# 
-#   scenario "A user submit a blank email" do
-#     visit "/"
-#     click_link "Sign Up"
-#     fill_in "Your email", :with => ""
-#     fill_in "Create a password", :with => "test"
-#     click_button "Sign Up"
-# 
-#     assert_contain "Email can't be blank"
-#     assert_not_contain "Welcome "
-#     assert_not_contain "Logout"
-#   end
-# end
-# 
-# Protest.story "As a user I want to login so I can access restricted features" do
-#   scenario "A user tries to login" do
-#     login_new_user
-# 
-#     assert_contain "Welcome #{@user.email}"
-#     assert_contain "Logout"
-#     assert_not_contain "Sign Up"
-#     assert_not_contain "Login"
-#   end
-# end
-# 
-# Protest.story "As a user I want to log out so I can prevent others from using my account" do
-#   scenario "A user tries to logout" do
-#     login_new_user
-#     click_link "Logout"
-# 
-#     assert_contain "Sign Up"
-#     assert_contain "Login"
-#     assert_not_contain "Welcome #{@user.email}"
-#     assert_not_contain "Logout"
-#   end
-# end
-# 
-# Protest.story "As a user I want to edit my account so I can change my email and password" do
-#   scenario "A user tries to edit his account" do
-#     login_new_user
-#     click_link "My account"
-#     fill_in "Your email", :with => "test@testing.com"
-#     fill_in "Your password", :with => "testing"
-#     click_button "Update"
-# 
-#     assert_contain "Your account was updated"
-#     assert_equal "test@testing.com", User.find(@user.id).email
-#     assert_equal "testing", User.find(@user.id).password
-#   end
-# end
-# 
-# Protest.story "As a user I want to delete my account so I remove my information from the website" do
-#   scenario "A user tries to delete his account" do
-#     login_new_user
-#     click_link "My account"
-#     click_link "permanently delete my account"
-# 
-#     assert_contain "Your account was deleted"
-#     assert_equal nil, User.find_by_email("test@test.com") 
-#   end
-# end

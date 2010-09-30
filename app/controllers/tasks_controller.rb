@@ -27,7 +27,7 @@ class TasksController < ApplicationController
 
   def update
     if @task.update_attributes(params[:task])
-      redirect_to list_url(@list), :notice => "The task was updated"
+      redirect_to list_tasks_url(@list), :notice => "The task was updated"
     else
       render :action => :edit
     end
@@ -36,6 +36,11 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     redirect_to list_tasks_url(@list), :notice => "The task was deleted"
+  end
+
+  def complete
+    # TODO mark selected tasks as complete
+    redirect_to list_tasks_url(@list)
   end
 
 private
