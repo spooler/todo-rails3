@@ -15,4 +15,14 @@ setup do
   click_link "list foo"
 end
 
-# As a user, I want to mark a task as done, so that I can track my progress
+# As a user, I want to delete a task, so that I can remove what I no longer use
+
+with(:selenium) do
+  test "A user tries to delete a task" do
+    page.evaluate_script('window.confirm = function() { return true; };')
+    click_link "delete_#{@task.id}"
+
+    assert has_content? 'The task was deleted'
+    assert Task.find_by_description("task foo") == nil
+  end
+end

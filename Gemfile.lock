@@ -30,6 +30,7 @@ GEM
     activesupport (3.0.0.rc2)
     arel (1.0.1)
       activesupport (~> 3.0.0)
+    batch (0.0.3)
     bcrypt-ruby (2.1.2)
     builder (2.1.2)
     capybara (0.3.9)
@@ -40,8 +41,9 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
     configuration (1.1.0)
-    contest (0.1.2)
     culerity (0.2.12)
+    cutest (0.1.5)
+      batch (~> 0.0.3)
     devise (1.1.2)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 0.10.7)
@@ -99,7 +101,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara (= 0.3.9)
-  contest (= 0.1.2)
+  cutest (= 0.1.5)
   devise (= 1.1.2)
   haml (= 3.0.18)
   launchy (= 0.3.7)

@@ -34,5 +34,5 @@ gem 'haml',         '3.0.18'
 group :development, :test do
   gem "capybara", "0.3.9"
   gem "launchy",  "0.3.7"
-  gem "contest",  "0.1.2"
+  gem "cutest",   "0.1.5"
 end

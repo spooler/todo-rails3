@@ -9,7 +9,7 @@
   %ul.with-actions
     - @tasks.each do |task|
       %li
-        .items= task.description
+        .item= task.description
         .actions
           = link_to image_tag("list-action-edit.png"), edit_list_task_path(@list, task), :id => "edit_#{task.id}"
           = link_to image_tag("list-action-delete.png"), list_task_path(@list, task), :method => :delete, :confirm => "Are you sure?", :id => "delete_#{task.id}"
